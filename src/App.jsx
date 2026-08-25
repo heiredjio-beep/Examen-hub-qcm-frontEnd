@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthContext';
+import { ProtectedRoute } from './routes/ProtectedRoute';
+import { Layout } from './components/Layout';
 
-function App() {
-  const [count, setCount] = useState(0)
+import Login from './pages/Login';
+import Students from './pages/admin/Students';
+import Dashboard from './pages/admin/Dashboard';
+import Courses from './pages/admin/Courses';
+import Exams from './pages/admin/Exams';
+import QuestionEditor from './pages/admin/QuestionEditor';
+import ExamResults from './pages/admin/ExamResults';
+import AvailableExams from './pages/student/AvailableExams';
+import TakeExam from './pages/student/TakeExam';
+import ExamResult from './pages/student/ExamResult';
+import MyResults from './pages/student/MyResults';
 
+/**
+ * Les onze routes du sujet, declarees une fois pour toutes par le socle.
+ *
+ * Ce fichier appartient a P1. Les autres membres remplissent uniquement
+ * leur page dans src/pages/ : personne n'a besoin de modifier App.jsx,
+ * donc ce fichier partage ne genere aucun conflit Git (regle R8).
+ */
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <AuthProvider>
+        <Layout>
+          <Routes>
+            <Route path="/login" element={<Login />} />
 
-      <div className="ticks"></div>
+            {/* Espace administrateur - role ADMIN exige */}
+            <Route element={<ProtectedRoute role="ADMIN" />}>
+              <Route path="/admin" element={<Dashboard />} />
+              <Route path="/admin/students" element={<Students />} />
+              <Route path="/admin/courses" element={<Courses />} />
+              <Route path="/admin/exams" element={<Exams />} />
+              <Route path="/admin/exams/:id/questions" element={<QuestionEditor />} />
+              <Route path="/admin/exams/:id/results" element={<ExamResults />} />
+            </Route>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+            {/* Espace etudiant - role STUDENT exige */}
+            <Route element={<ProtectedRoute role="STUDENT" />}>
+              <Route path="/student" element={<AvailableExams />} />
+              <Route path="/student/exams/:id" element={<TakeExam />} />
+              <Route path="/student/exams/:id/result" element={<ExamResult />} />
+              <Route path="/student/results" element={<MyResults />} />
+            </Route>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+            {/* La racine renvoie vers /login ; ProtectedRoute se charge
+                ensuite d'orienter chacun vers l'espace de son role. */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Layout>
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
-
-export default App
