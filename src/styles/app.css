@@ -1,0 +1,294 @@
+/* =====================================================================
+   Exam Hub - feuille de styles partagee
+
+   Volontairement minimale. Elle fournit les briques dont les cinq
+   verticales ont besoin : barre de navigation, carte, table, formulaire,
+   bouton, badge, message d'erreur.
+
+   Utilisez ces classes plutot que d'ecrire du CSS dans votre page :
+   c'est ce qui evite que l'application ait cinq styles differents.
+   ===================================================================== */
+
+:root {
+  --couleur-fond: #f4f6f9;
+  --couleur-surface: #ffffff;
+  --couleur-bordure: #dfe4ec;
+  --couleur-texte: #1f2937;
+  --couleur-texte-discret: #6b7280;
+  --couleur-primaire: #1e3a5f;
+  --couleur-primaire-clair: #2c5282;
+  --couleur-succes: #1a7f4b;
+  --couleur-succes-fond: #e7f6ee;
+  --couleur-erreur: #b42318;
+  --couleur-erreur-fond: #fdeceb;
+  --couleur-alerte: #92400e;
+  --couleur-alerte-fond: #fef3c7;
+
+  --rayon: 8px;
+  --espace: 16px;
+  --ombre: 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  margin: 0 0 12px;
+  color: var(--couleur-primaire);
+  line-height: 1.25;
+}
+
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.05rem; }
+
+a {
+  color: var(--couleur-primaire-clair);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* --- Structure ----------------------------------------------------- */
+
+.application {
+  min-height: 100vh;
+}
+
+.entete {
+  display: flex;
+  align-items: center;
+  gap: var(--espace);
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  background: var(--couleur-primaire);
+  box-shadow: var(--ombre);
+}
+
+.marque {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.marque:hover {
+  text-decoration: none;
+}
+
+.navigation {
+  display: flex;
+  gap: 18px;
+  flex: 1;
+}
+
+.navigation a {
+  color: #c9d6e6;
+  font-size: 0.92rem;
+}
+
+.navigation a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.session .texte-discret {
+  color: #c9d6e6;
+}
+
+.contenu {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 24px;
+}
+
+/* --- Carte --------------------------------------------------------- */
+
+.carte {
+  background: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+  padding: 20px;
+  margin-bottom: var(--espace);
+}
+
+.carte-entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espace);
+  margin-bottom: var(--espace);
+}
+
+.texte-discret {
+  color: var(--couleur-texte-discret);
+  font-size: 0.9rem;
+}
+
+/* --- Table --------------------------------------------------------- */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.table th {
+  background: #eef2f7;
+  color: var(--couleur-primaire);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-vide {
+  padding: 24px;
+  text-align: center;
+  color: var(--couleur-texte-discret);
+}
+
+/* --- Formulaire ---------------------------------------------------- */
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.champ label {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.champ input,
+.champ select,
+.champ textarea {
+  padding: 9px 11px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 6px;
+  font: inherit;
+  background: #ffffff;
+}
+
+.champ input:focus,
+.champ select:focus,
+.champ textarea:focus {
+  outline: 2px solid var(--couleur-primaire-clair);
+  outline-offset: 1px;
+  border-color: var(--couleur-primaire-clair);
+}
+
+/* --- Bouton -------------------------------------------------------- */
+
+.bouton {
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--couleur-primaire);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bouton:hover:not(:disabled) {
+  background: var(--couleur-primaire-clair);
+}
+
+.bouton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.bouton-discret {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.bouton-secondaire {
+  background: #ffffff;
+  border-color: var(--couleur-bordure);
+  color: var(--couleur-texte);
+}
+
+.bouton-danger {
+  background: var(--couleur-erreur);
+}
+
+/* --- Badge --------------------------------------------------------- */
+
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: var(--couleur-primaire);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-succes { background: var(--couleur-succes-fond); color: var(--couleur-succes); }
+.badge-erreur { background: var(--couleur-erreur-fond); color: var(--couleur-erreur); }
+.badge-alerte { background: var(--couleur-alerte-fond); color: var(--couleur-alerte); }
+
+/* --- Messages ------------------------------------------------------ */
+
+/* RG-13 : le message affiche ici est celui renvoye par le serveur,
+   repris tel quel. N'inventez pas votre propre texte d'erreur. */
+.message {
+  padding: 11px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  margin-bottom: var(--espace);
+  font-size: 0.92rem;
+}
+
+.message-erreur {
+  background: var(--couleur-erreur-fond);
+  border-color: #f5c2c0;
+  color: var(--couleur-erreur);
+}
+
+.message-succes {
+  background: var(--couleur-succes-fond);
+  border-color: #b7e4c9;
+  color: var(--couleur-succes);
+}
+
+.message-alerte {
+  background: var(--couleur-alerte-fond);
+  border-color: #fcd34d;
+  color: var(--couleur-alerte);
+}
