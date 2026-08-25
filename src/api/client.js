@@ -2,6 +2,16 @@ const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
 
 const CLE_TOKEN = 'examhub.token';
 
+/**
+ * Evenement emis des qu'une reponse 401 arrive : le token est absent,
+ * expire ou invalide. AuthContext l'ecoute et vide la session, ce qui
+ * declenche la redirection vers /login via ProtectedRoute.
+ *
+ * On passe par un evenement plutot que par un import direct du routeur :
+ * client.js reste un module sans dependance a React.
+ */
+export const EVENEMENT_NON_AUTHENTIFIE = 'examhub:non-authentifie';
+
 export function lireToken() {
   return localStorage.getItem(CLE_TOKEN);
 }
@@ -83,6 +93,11 @@ export async function apiFetch(path, options = {}) {
 
   if (!reponse.ok) {
     const message = donnees?.message ?? `Erreur ${reponse.status}.`;
+
+    if (reponse.status === 401) {
+      window.dispatchEvent(new CustomEvent(EVENEMENT_NON_AUTHENTIFIE));
+    }
+
     throw new ApiError(reponse.status, message);
   }
 

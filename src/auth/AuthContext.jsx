@@ -1,5 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { apiFetch, ecrireToken, effacerToken, lireToken } from '../api/client';
+import {
+  EVENEMENT_NON_AUTHENTIFIE,
+  apiFetch,
+  ecrireToken,
+  effacerToken,
+  lireToken,
+} from '../api/client';
 
 const CLE_UTILISATEUR = 'examhub.user';
 
@@ -55,6 +61,20 @@ export function AuthProvider({ children }) {
     effacerToken();
     localStorage.removeItem(CLE_UTILISATEUR);
     setUtilisateur(null);
+  }, []);
+
+  useEffect(() => {
+    // Un 401 renvoye par n'importe quel appel vide la session. Combine a
+    // ProtectedRoute, cela redirige l'utilisateur vers /login sans que
+    // chaque page ait a gerer le cas du token expire.
+    function surNonAuthentifie() {
+      effacerToken();
+      localStorage.removeItem(CLE_UTILISATEUR);
+      setUtilisateur(null);
+    }
+
+    window.addEventListener(EVENEMENT_NON_AUTHENTIFIE, surNonAuthentifie);
+    return () => window.removeEventListener(EVENEMENT_NON_AUTHENTIFIE, surNonAuthentifie);
   }, []);
 
   const valeur = useMemo(
