@@ -8,6 +8,29 @@ Dépôt backend associé : [exam-hub-qcm](https://github.com/heiredjio-beep/exam
 
 ---
 
+## Démarrage rapide
+
+**Démarrez le backend en premier** (voir son README), puis :
+
+```bash
+cp .env.example .env      # PowerShell : copy .env.example .env
+npm install
+npm run dev               # http://localhost:5173
+```
+
+Connectez-vous avec `admin@examhub.local` / `Admin123!`.
+
+### Pour la correction
+
+| Ce que vous cherchez | Où |
+|---|---|
+| Dérouler l'application en 10 étapes | [Scénario de démonstration](#scénario-de-démonstration) |
+| Les 11 routes et leur rôle exigé | [Routes](#routes) |
+| Comptes de connexion | [Comptes de test](#comptes-de-test) |
+| Vérifier les règles côté API | Grille de vérification du README backend |
+
+---
+
 ## Prérequis
 
 Node.js 20 ou plus, npm 10 ou plus.
@@ -68,18 +91,26 @@ Créés par `npm run db:seed` côté backend.
 
 ### Scénario de démonstration
 
-1. Se connecter avec `tiana@examhub.local` → message **« Ce compte a été désactivé »**,
-   différent de celui d'un mauvais mot de passe (RG-11)
-2. Se connecter en administrateur → `/admin`, les quatre compteurs
-3. `/admin/courses` → supprimer PROG2 → **409 lisible à l'écran** (RG-09)
-4. `/admin/exams/3/questions` → **bandeau de verrouillage**, boutons grisés (RG-08)
-5. Se connecter avec `miora@examhub.local` → seul l'examen ouvert et non passé apparaît
-   (RG-02, RG-03) ; l'examen fermé est absent
-6. Passer l'examen en laissant des questions sans réponse → confirmation → note et
-   correction complète immédiates (RG-05, RG-06, RG-12)
-7. Revenir sur `/student` → l'examen a disparu de la liste (RG-02)
-8. **Onglet réseau ouvert pendant le passage** : la réponse de `/api/my/exams/1` ne
-   contient aucun champ `isCorrect` (RG-07)
+Dix étapes, chacune démontrant une règle de gestion à l'écran.
+
+| # | Action | Ce qui doit se produire | Règle |
+|---|---|---|---|
+| 1 | Se connecter avec `tiana@examhub.local` | **« Ce compte a ete desactive »** — message *différent* d'un mauvais mot de passe | RG-11 |
+| 2 | Se connecter en administrateur | `/admin`, quatre compteurs renseignés | — |
+| 3 | `/admin/courses` → saisir le code `PROG2`, déjà pris → Ajouter | **« Le code de cours "PROG2" est deja utilise. »** affiché en rouge | unicité |
+| 4 | `/admin/courses` → Supprimer « Programmation 2 » → confirmer | **« Ce cours contient 2 examens et ne peut pas etre supprime. »** | RG-09 |
+| 5 | `/admin/exams` → « Questions » sur *Contrôle de bases de données* | **Bandeau de verrouillage**, tous les boutons d'écriture grisés | RG-08 |
+| 6 | `/admin/students` → Désactiver un étudiant | Il **reste dans la liste**, badge rouge « Desactive » | RG-10 |
+| 7 | Se connecter avec `miora@examhub.local` | Deux examens seulement ; le contrôle d'algèbre, **fermé, est absent** | RG-03 |
+| 8 | **Ouvrir l'onglet réseau**, puis passer un examen | La réponse de `/api/my/exams/1` ne contient **aucun `isCorrect`** | RG-07 |
+| 9 | Laisser des questions sans réponse → Soumettre → confirmer | Note, pourcentage et **correction complète** immédiats ; les questions non répondues valent 0 | RG-05, RG-06, RG-12 |
+| 10 | Revenir sur « Examens disponibles » | L'examen **a disparu** de la liste | RG-02 |
+
+L'étape 8 est la plus démonstrative : elle prouve que la bonne réponse ne quitte jamais
+le serveur avant la soumission.
+
+Les suppressions passent par une confirmation native du navigateur — c'est voulu et exigé
+par le sujet. Cliquez « OK », le message du serveur s'affiche ensuite.
 
 ---
 
