@@ -61,9 +61,25 @@ Le fichier `.env` n'est jamais versionné, `.env.example` sert de modèle.
 |---|---|---|
 | Administrateur | `admin@examhub.local` | `Admin123!` |
 | Étudiant | `andry@examhub.local` | `Etudiant123!` |
+| Étudiant | `miora@examhub.local` | `Etudiant123!` |
 | Étudiant désactivé | `tiana@examhub.local` | `Etudiant123!` |
 
 Créés par `npm run db:seed` côté backend.
+
+### Scénario de démonstration
+
+1. Se connecter avec `tiana@examhub.local` → message **« Ce compte a été désactivé »**,
+   différent de celui d'un mauvais mot de passe (RG-11)
+2. Se connecter en administrateur → `/admin`, les quatre compteurs
+3. `/admin/courses` → supprimer PROG2 → **409 lisible à l'écran** (RG-09)
+4. `/admin/exams/3/questions` → **bandeau de verrouillage**, boutons grisés (RG-08)
+5. Se connecter avec `miora@examhub.local` → seul l'examen ouvert et non passé apparaît
+   (RG-02, RG-03) ; l'examen fermé est absent
+6. Passer l'examen en laissant des questions sans réponse → confirmation → note et
+   correction complète immédiates (RG-05, RG-06, RG-12)
+7. Revenir sur `/student` → l'examen a disparu de la liste (RG-02)
+8. **Onglet réseau ouvert pendant le passage** : la réponse de `/api/my/exams/1` ne
+   contient aucun champ `isCorrect` (RG-07)
 
 ---
 
@@ -138,6 +154,20 @@ vers `/login` — aucune page n'a à gérer le token expiré.
 | `/student/exams/:id/result` | STUDENT | `student/ExamResult.jsx` | P5 |
 | `/student/results` | STUDENT | `student/MyResults.jsx` | P5 |
 
+### Le parcours étudiant
+
+`TakeExam.jsx` affiche toutes les questions sur une seule page, avec **un groupe de
+boutons radio par question** : deux réponses sont mécaniquement impossibles. Un compteur
+« X sur Y questions répondues » et l'heure de fermeture restent visibles.
+
+La soumission demande une **confirmation explicite**, avertit s'il reste des questions
+sans réponse, et rappelle que l'envoi est définitif. Le bouton est désactivé pendant
+l'appel pour éviter le double clic — même si le serveur s'en protège déjà.
+
+Le résultat complet est renvoyé par `POST /submit` lui-même : il est transmis à
+`ExamResult.jsx` par l'état de navigation React, sans second appel. Ouvrir l'URL de
+résultat directement renvoie vers l'historique, c'est volontaire.
+
 Non connecté → renvoi vers `/login`. Connecté avec le mauvais rôle → renvoi vers
 l'espace de son rôle réel. Ces gardes ne protègent rien en soi : la vraie protection
 est le `roleGuard` côté serveur.
@@ -158,6 +188,10 @@ page — c'est ce qui évite que l'application ait cinq styles différents.
 | `.badge`, `.badge-succes`, `.badge-erreur`, `.badge-alerte` | Étiquettes d'état |
 | `.message`, `.message-erreur`, `.message-succes` | Messages |
 | `.texte-discret` | Texte secondaire |
+| `.choix-ligne` | Ligne de choix cliquable (passage d'examen) |
+| `.choix-correct`, `.choix-errone` | Correction en vert / rouge |
+| `.note-globale` | Note affichée en grand |
+| `.compteurs`, `.compteur-valeur`, `.compteur-libelle` | Grille de compteurs |
 
 ---
 
