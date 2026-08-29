@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { ApiError } from '../api/client';
 
@@ -9,7 +9,7 @@ import { ApiError } from '../api/client';
  * Proprietaire : P2
  */
 export default function Login() {
-  const { login } = useAuth();
+  const { login, estConnecte, estAdmin, pretAuDemarrage } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,6 +34,19 @@ export default function Login() {
     } finally {
       setEnCours(false);
     }
+  }
+
+  // Tant que la session stockee n'a pas ete relue, on n'affiche rien :
+  // sinon le formulaire apparait une fraction de seconde avant la redirection.
+  if (!pretAuDemarrage) {
+    return null;
+  }
+
+  // Un utilisateur deja connecte qui revient sur /login est renvoye vers son
+  // espace, plutot que de voir un formulaire de connexion sous une barre de
+  // navigation qui affiche deja sa session.
+  if (estConnecte) {
+    return <Navigate to={estAdmin ? '/admin' : '/student'} replace />;
   }
 
   return (
