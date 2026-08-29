@@ -235,10 +235,24 @@ a:hover {
    scopee sur .entete : sans ce scope, le texte blanc de l'en-tete
    rendait ces boutons invisibles dans les tableaux. */
 .bouton-discret {
+  /* Volontairement autonome : la classe est utilisee seule dans certaines
+     pages, sans .bouton. Elle porte donc sa propre geometrie. */
+  display: inline-block;
+  padding: 7px 13px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 6px;
   background: transparent;
-  border-color: var(--couleur-bordure);
   color: var(--couleur-primaire-clair);
-  font-weight: 500;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.bouton-discret:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .bouton-discret:hover:not(:disabled) {
