@@ -230,11 +230,31 @@ a:hover {
   cursor: not-allowed;
 }
 
+/* Bouton secondaire discret, lisible sur fond clair (tableaux, cartes).
+   La variante blanche de la barre de navigation est definie plus bas,
+   scopee sur .entete : sans ce scope, le texte blanc de l'en-tete
+   rendait ces boutons invisibles dans les tableaux. */
 .bouton-discret {
   background: transparent;
+  border-color: var(--couleur-bordure);
+  color: var(--couleur-primaire-clair);
+  font-weight: 500;
+}
+
+.bouton-discret:hover:not(:disabled) {
+  background: #eef2f7;
+  border-color: var(--couleur-primaire-clair);
+}
+
+/* Variante pour la barre de navigation sombre uniquement. */
+.entete .bouton-discret {
   border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
-  font-weight: 500;
+}
+
+.entete .bouton-discret:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .bouton-secondaire {
@@ -352,4 +372,84 @@ a:hover {
 .compteur-libelle {
   color: var(--couleur-texte-discret);
   font-size: 0.88rem;
+}
+
+/* --- Compteurs du tableau de bord ----------------------------------- */
+
+/* Classes utilisees par pages/admin/Dashboard.jsx. */
+.grille-compteurs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--espace);
+}
+
+.carte-compteur {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+}
+
+/* --- Liens rapides et actions groupees ------------------------------ */
+
+/* Sans cela, deux liens adjacents dans le JSX se collent l'un a l'autre
+   et se lisent comme un seul mot. */
+.liens-rapides {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.liens-rapides a {
+  padding: 7px 14px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.liens-rapides a:hover {
+  background: #eef2f7;
+  text-decoration: none;
+}
+
+/* Cellule d'actions d'un tableau : boutons et liens alignes et espaces,
+   quel que soit l'espacement ecrit dans le JSX. */
+.table td:last-child {
+  white-space: nowrap;
+}
+
+.table td > button + button,
+.table td > button + a,
+.table td > a + a,
+.table td > a + button {
+  margin-left: 8px;
+}
+
+.table td a {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* --- Confort de lecture --------------------------------------------- */
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+/* Un formulaire de creation reste lisible meme large. */
+.champ input,
+.champ select,
+.champ textarea {
+  max-width: 100%;
+}
+
+.champ textarea {
+  min-height: 72px;
+  resize: vertical;
 }
