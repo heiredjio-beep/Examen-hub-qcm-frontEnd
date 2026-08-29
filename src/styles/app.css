@@ -292,3 +292,64 @@ a:hover {
   border-color: #fcd34d;
   color: var(--couleur-alerte);
 }
+
+/* --- Passage d'examen et correction -------------------------------- */
+
+/* Une ligne de choix cliquable en entier, pas seulement le bouton radio. */
+.choix-ligne {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.choix-ligne:hover {
+  background: #f8fafc;
+}
+
+.choix-ligne input {
+  margin-top: 3px;
+}
+
+/* Correction affichee apres soumission (RG-12).
+   Vert = bonne reponse, rouge = choix errone de l'etudiant,
+   neutre = question laissee sans reponse. */
+.choix-correct {
+  border-color: var(--couleur-succes);
+  background: var(--couleur-succes-fond);
+}
+
+.choix-errone {
+  border-color: var(--couleur-erreur);
+  background: var(--couleur-erreur-fond);
+}
+
+.note-globale {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--couleur-primaire);
+  line-height: 1.1;
+}
+
+/* Compteurs du tableau de bord et de l'espace etudiant. */
+.compteurs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--espace);
+}
+
+.compteur-valeur {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--couleur-primaire);
+}
+
+.compteur-libelle {
+  color: var(--couleur-texte-discret);
+  font-size: 0.88rem;
+}
