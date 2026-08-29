@@ -15,7 +15,13 @@ function calculerStatut(examen) {
 }
 
 function formaterLocal(isoUtc) {
-  return new Date(isoUtc).toLocaleString();
+  // Format francais explicite, sans les secondes : toLocaleString() sans
+  // option suit la locale du navigateur et affiche l'heure a la seconde,
+  // ce qui alourdit le tableau sans rien apporter.
+  return new Date(isoUtc).toLocaleString('fr-FR', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  });
 }
 
 function isoVersChampLocal(iso) {
